@@ -3,7 +3,8 @@
         "psr-4": {
             "Router\\": "Router/",
             "Exceptions\\": "Exceptions/",
-            "Controllers\\": "Controllers/"
+            "Controllers\\": "Controllers/",
+            "Source\\": "src/"
         }
     },
     "require": {

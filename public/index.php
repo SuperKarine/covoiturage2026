@@ -15,10 +15,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Exceptions\RouteNotFoundException;
 use Exceptions\UserException;
-use Router\Login;
+//use Router\Login;
 use MongoDB\Client;
 //use Router\Payment;
-use Router\User;
+//use Router\User;
 use Router\Router;
 
 
@@ -36,17 +36,15 @@ echo "<br>";
 //var_dump($payment);
 
 
+//try {
+ //   $login->login();
+//} catch (UserException $e) {
+ //   echo $e->getMessage() . ' dans le fichier ' . $e->getFile();
+//} 
 
-$user = new User('machine', 'password');
-$login = new Login($user);
 
-try {
-    $login->login();
-} catch (UserException $e) {
-    echo $e->getMessage() . ' dans le fichier ' . $e->getFile();
-} 
 
-echo '<pre>';
+define('BASE_VIEW_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR);
 
 $router = new Router();
 
