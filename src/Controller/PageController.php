@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\Controller;
-use App\Repository\ProposeTrajetChauffeursRepository;
+
 
 class PageController extends Controller
 {
@@ -27,16 +27,6 @@ class PageController extends Controller
         $this->render('page/covoiturage');
     }
 
-    public function essaie_trajets(): void
-    {
-        $proposeTrajetChauffeursRepository = new ProposeTrajetChauffeursRepository();
-        $trajets_chauffeurs = $proposeTrajetChauffeursRepository->findAll();
-        
-        $this->render('page/essaie_trajets', [
-            'trajets_chauffeurs' => $trajets_chauffeurs
-        ]);
-    }
-
     public function renderView(string $view): void
     {
         $this->render($view);
@@ -48,14 +38,6 @@ class PageController extends Controller
     }
 
     
-    public function propose_trajet_chauffeurs(): void
-    {
-        $proposeTrajetChauffeursRepository = new ProposeTrajetChauffeursRepository();
-        $trajetsChauffeurs = $proposeTrajetChauffeursRepository->findAll();
-        
-        $this->render('page/propose_trajet_chauffeurs', [
-            'trajetsChauffeurs' => $trajetsChauffeurs
-        ]);
-    }
+
     
 }

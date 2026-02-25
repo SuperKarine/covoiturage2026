@@ -21,9 +21,7 @@ services:
     ports:
      - "8085:80"  # Enlever ce port en phase de prod
     volumes:
-      - ./public:/var/www/html/public
-      - ./src:/var/www/html/src
-      - ./config:/var/www/html/config
+      - ./:/var/www/html
     env_file:
       - .env
     depends_on:

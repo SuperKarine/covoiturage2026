@@ -1,37 +1,73 @@
+
 <?php
 
 echo "Je suis sur covoiturage2026";
 
 echo "<br>";
 
-
-try{
-
-    if(empty($_GET['page'])){
-        $page ="accueil";
-    } else {
-        $path = explode(separator: "/", string: filter_var($_GET["page"], FILTER_SANITIZE_URL));
-        $page = $path[0];
-    }
-
-    switch ($page) {
-        case "accueil":
-            require_once "homePage.php";
-            break;
-
-        case "connexion":
-            require_once "loginPage.php";
-            break;
-
-        case "test":
-            require_once "testPage.php";
-            break;
-
-        default: 
-            throw new Exception (message: "La page n'existe pas !");
-    
-    }}catch(Exception $e){
-        echo "Erreur : ".$e->getMessage();
-    }
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 
+
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Exceptions\RouteNotFoundException;
+use Exceptions\UserException;
+use Router\Login;
+use MongoDB\Client;
+//use Router\Payment;
+use Router\User;
+use Router\Router;
+
+
+$client = new Client("mongodb://localhost:27017");
+$db = $client->covoiturage;
+
+echo "Connexion OK";
+
+echo "<br>";
+
+
+
+//$payment = new Payment();
+
+//var_dump($payment);
+
+
+
+$user = new User('machine', 'password');
+$login = new Login($user);
+
+try {
+    $login->login();
+} catch (UserException $e) {
+    echo $e->getMessage() . ' dans le fichier ' . $e->getFile();
+} 
+
+echo '<pre>';
+
+$router = new Router();
+
+$router->register('/', ['Controllers\HomeController', 'index']);
+
+//$router->register('/', function () {
+ //   return 'HomePage';
+
+//});
+
+//$router->register('/contact', function () {
+ //   return 'ContactPage';
+
+//});
+
+
+
+
+
+try {
+    echo $router->resolve($_SERVER['REQUEST_URI']);
+} catch (RouteNotFoundException $e) {
+    echo $e->getMessage();
+}
