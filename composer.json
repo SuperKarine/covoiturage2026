@@ -4,6 +4,7 @@
             "Router\\": "Router/",
             "Exceptions\\": "Exceptions/",
             "Controllers\\": "Controllers/",
+            "Models\\": "Models/",
             "Source\\": "src/"
         }
     },

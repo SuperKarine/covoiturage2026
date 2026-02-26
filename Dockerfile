@@ -69,7 +69,7 @@ COPY --from=deps /app/vendor /var/www/html/vendor
 # Copie le code
 COPY ./public /var/www/html/public
 COPY ./src /var/www/html/src
-COPY ./config /var/www/html/config
+
 
 # Copie des fichiers Bootstrap du stage de développement 
 COPY --from=deps /app/public/assets /var/www/html/public/assets  

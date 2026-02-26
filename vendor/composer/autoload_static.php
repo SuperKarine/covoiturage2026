@@ -29,6 +29,7 @@ class ComposerStaticInit2f4de682f4ba18bb67e79a83c64f2065
         'M' => 
         array (
             'MongoDB\\' => 8,
+            'Models\\' => 7,
         ),
         'E' => 
         array (
@@ -65,6 +66,10 @@ class ComposerStaticInit2f4de682f4ba18bb67e79a83c64f2065
         'MongoDB\\' => 
         array (
             0 => __DIR__ . '/..' . '/mongodb/mongodb/src',
+        ),
+        'Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Models',
         ),
         'Exceptions\\' => 
         array (
