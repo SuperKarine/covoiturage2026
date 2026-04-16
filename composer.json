@@ -1,11 +1,7 @@
 {
     "autoload": {
         "psr-4": {
-            "Router\\": "Router/",
-            "Exceptions\\": "Exceptions/",
-            "Controllers\\": "Controllers/",
-            "Models\\": "Models/",
-            "Source\\": "src/"
+            "": "src/"
         }
     },
     "require": {
@@ -14,6 +10,4 @@
     "require-dev": {
         "phpunit/phpunit": "^9.0"
     }
-
-    
 }

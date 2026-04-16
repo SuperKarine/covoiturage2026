@@ -28,11 +28,6 @@ echo "<br>";
 
 
 
-//try {
- //   $login->login();
-//} catch (UserException $e) {
- //   echo $e->getMessage() . ' dans le fichier ' . $e->getFile();
-//} 
 
 
 

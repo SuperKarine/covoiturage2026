@@ -5,7 +5,7 @@ use Models\Model;
 
 class User extends Model
 {
-    protected string $table = 'Users';
+    protected string $table = 'users';
 
     public function getAll(): array
     {

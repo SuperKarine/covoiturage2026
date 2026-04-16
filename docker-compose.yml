@@ -8,7 +8,7 @@ services:
       #- "--providers.docker.exposedbydefault=false"
      # - "--entrypoints.web.address=:80"
     #ports:
-     # - "80:80"
+     # - "80:80"et
      # - "8080:8080"
     #volumes:
      # - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -18,12 +18,14 @@ services:
   server:
     build:
       context: .
+    #image: ghcr.io/superkarine/covoiturage2026-final:production
     ports:
      - "8085:80"  # Enlever ce port en phase de prod
     volumes:
       - ./:/var/www/html
     env_file:
-      - .env
+    #  - .env
+      - .envTest
     depends_on:
       db:
         condition: service_healthy
