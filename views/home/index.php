@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/assets/css/bootstrap.min.css">
     <script src="../../public/assets/js/bootstrap.bundle.min.js"></script>   
-    <title>HomePage</title>
+    <title>Covoiturage2026</title>
 </head>
 <body>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic obcaecati, necessitatibus tenetur eius accusamus exercitationem similique sequi expedita repellat neque voluptatem quidem nihil quos. Earum, quia. Optio, nesciunt. Dolorem, eius?</p>
+   <h1>Covoiturage2026</h1>
+
+   <p>Bienvenue sur mon site</p>
 </body>
 </html>

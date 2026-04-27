@@ -1,7 +1,9 @@
 {
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "Router\\": "src/Router/",
+            "Source\\": "src/Source/",
+            "Controllers\\": "src/Controllers/"
         }
     },
     "require": {

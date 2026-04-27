@@ -73,6 +73,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
     restart: always
     ports:
       - "8086:80"
