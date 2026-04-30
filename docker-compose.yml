@@ -1,43 +1,48 @@
 services:
-  #traefik:
-   # image: traefik:v3.3
-    #container_name: traefik
-    #command:
-     # - "--api.insecure=true"
-      #- "--providers.docker=true"
-      #- "--providers.docker.exposedbydefault=false"
-     # - "--entrypoints.web.address=:80"
-    #ports:
-     # - "80:80"et
-     # - "8080:8080"
-    #volumes:
-     # - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    #networks:
-    #  - web
 
+  # =========================
+  # TRAEFIK (DEV COMMENTÉ)
+  # =========================
+  # traefik:
+  #   image: traefik:v3.3
+  #   container_name: ecoride-traefik
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #   ports:
+  #     - "80:80"
+  #     - "8080:8080"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - ecoride_web
+
+
+  # =========================
+  # APP
+  # =========================
   server:
-    build:
-      context: .
-    #image: ghcr.io/superkarine/covoiturage2026-final:production
+    container_name: ecoride-server-1
+    build: .
     ports:
-     - "8085:80"  # Enlever ce port en phase de prod
+      - "8085:80"
     volumes:
       - ./:/var/www/html
     env_file:
-    #  - .env
       - .envTest
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     networks:
-      - web
-    #labels:
-     # - "traefik.enable=true"
-      #- "traefik.http.routers.ecoride.rule=Host(`ecoride-hauts-de-france.site`)"
-      #- "traefik.http.routers.ecoride.entrypoints=web"
-      #- "traefik.http.services.ecoride.loadbalancer.server.port=80"
+      - ecoride_web
 
+
+  # =========================
+  # DB
+  # =========================
   db:
+    container_name: ecoride-db-1
     image: mariadb:10.11
     restart: always
     environment:
@@ -45,66 +50,137 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
     volumes:
       - ecoride-db-data:/var/lib/mysql
-    expose:
-      - "3306"
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    ports:
+      - "3307:3306"
     networks:
-      - web
+      - ecoride_web
 
+
+  # =========================
+  # PHPMYADMIN
+  # =========================
+  phpmyadmin:
+    container_name: ecoride-phpmyadmin-1
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    ports:
+      - "8086:80"
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+    networks:
+      - ecoride_web
+
+
+  # =========================
+  # PHPMYADMIN TEST
+  # =========================
+  phpmyadmin-test:
+    container_name: ecoride-phpmyadmin-test-1
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    ports:
+      - "8103:80"
+    environment:
+      PMA_HOST: db-test
+      PMA_PORT: 3306
+    depends_on:
+      - db-test
+    networks:
+      - ecoride_web
+
+
+  # =========================
+  # PHPMYADMIN RECOVERY
+  # =========================
+  phpmyadmin-recovery:
+    container_name: ecoride-phpmyadmin-recovery-1
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    ports:
+      - "8120:80"
+    environment:
+      PMA_HOST: recovery-db
+      PMA_PORT: 3306
+    depends_on:
+      - recovery-db
+    networks:
+      - ecoride_web
+
+
+  # =========================
+  # MONGO
+  # =========================
   mongo:
+    container_name: ecoride-mongo-1
     image: mongo
-    restart: always  
+    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ecoride-mongo-data:/data/db
-    expose:
-      - "27017"
-    networks:
-      - web
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    platform: linux/amd64
-    restart: always
     ports:
-      - "8086:80"
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    depends_on:
-      - db
+      - "27018:27017"
     networks:
-      - web
+      - ecoride_web
+
 
   mongo-express:
+    container_name: ecoride-mongo-express-1
     image: mongo-express
-    restart: always
     ports:
       - "8087:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo
     networks:
-      - web
+      - ecoride_web
+
+
+  # =========================
+  # TEST DB
+  # =========================
+  db-test:
+    container_name: ecoride-db-test-1
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: ecoride_test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - ecoride-db-test-data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    networks:
+      - ecoride_web
+
+
+  # =========================
+  # RECOVERY
+  # =========================
+  recovery-db:
+    container_name: ecoride-recovery-db-1
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ecoride-recovery-db-data:/var/lib/mysql
+    networks:
+      - ecoride_web
+
 
 volumes:
   ecoride-db-data:
+  ecoride-db-test-data:
   ecoride-mongo-data:
+  ecoride-recovery-db-data:
 
 networks:
-  web:
-    external: false  # pour la prod mettre external: true
+  ecoride_web:
+    driver: bridge

@@ -6,7 +6,7 @@ use Router\Router;
 
 $router = new Router();
 
-// On enregistre TOUTES les routes
+// J' enregistre toutes les routes
 $router->register('/home', ['Controllers\HomeController', 'index']);
 $router->register('/auth', ['Controllers\AuthController', 'register']);
 
