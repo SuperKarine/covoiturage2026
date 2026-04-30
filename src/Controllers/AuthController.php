@@ -67,6 +67,22 @@ class AuthController
                 $errors['password'] = "Vous devez rentrer un mot de passe valide et confirmé";
                 var_dump($errors);
             }
+
+            //Condition avant de passer à l'inscription (si le []errors est vide)
+            if (empty($errors)) {
+
+                // Génération d’un token sécurisé
+                $token = bin2hex(random_bytes(32));
+            
+                $this->userModel->createUser([
+                    'username' => $_POST['username'],
+                    'email' => $_POST['email'],
+                    'password' => $_POST['password'],
+                    'confirmation_token' => $token
+                ]);
+            
+                
+            }
         }
     }
 }

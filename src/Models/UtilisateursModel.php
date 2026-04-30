@@ -33,6 +33,22 @@ class UtilisateursModel extends Model
         return $stmt->fetch();
     }
 
+    //Condition avant de passer à l'inscription (si le []errors est vide)
+    public function createUser(array $data)
+    {
+        $stmt = self::$pdo->prepare("
+            INSERT INTO {$this->table} (username, email, password, confirmation_token)
+            VALUES (?, ?, ?, ?)
+        ");
+    
+        return $stmt->execute([
+            $data['username'],
+            $data['email'],
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['confirmation_token']
+        ]);
+    }
+    
 
 
 }
