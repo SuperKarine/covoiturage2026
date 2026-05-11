@@ -2,6 +2,7 @@
 namespace Models;
 
 use Models\Model;
+use PDO;
 
 class UtilisateursModel extends Model
 {
@@ -9,46 +10,54 @@ class UtilisateursModel extends Model
 
 
     //Pour retourner tous les utilisateurs
-    public function getAll(): array
+    public function getAll(int $limit = 20, int $offset = 0): array|false
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table}");
+        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} LIMIT :limit OFFSET :offset");
+        
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-
     // Pour avoir un identifiant unique
-    public function findByUsername(string $username)
+    public function findByUsername(string $username): array|false
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} WHERE username = ?");
+        $stmt = self::$pdo->prepare("SELECT id, username, email FROM {$this->table} WHERE username = ?");
         $stmt->execute([$username]);
         return $stmt->fetch();
     }
 
     // Pour avoir une adresse email unique
-    public function findByEmail(string $email)
+    public function findByEmail(string $email): array|false
     {
         $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
 
-    //Condition avant de passer à l'inscription (si le []errors est vide)
-    public function createUser(array $data)
+    //Insère un nouvel utilisateur en base de données
+    public function createUser(array|false $data): bool
     {
-        $stmt = self::$pdo->prepare("
-            INSERT INTO {$this->table} (username, email, password, confirmation_token)
-            VALUES (?, ?, ?, ?)
-        ");
+        try {
+            $stmt = self::$pdo->prepare("
+                INSERT INTO {$this->table} (username, email, password, confirmation_token)
+                VALUES (?, ?, ?, ?)
+            ");
     
-        return $stmt->execute([
-            $data['username'],
-            $data['email'],
-            password_hash($data['password'], PASSWORD_BCRYPT),
-            $data['confirmation_token']
-        ]);
+            return $stmt->execute([
+                $data['username'],
+                $data['email'],
+                $data['password'],
+                $data['confirmation_token']
+            ]);
+    
+        } catch (\PDOException $e) {
+            
+            if ($e->getCode() === '23000') {
+                return false;
+            }
+            throw $e; 
+        }
     }
-    
-
-
 }
