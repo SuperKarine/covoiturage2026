@@ -15,6 +15,7 @@ class AuthController
 
     public function register()
     {
+        
         $errors = [];
 
         //  Traitement du formulaire (POST)
@@ -27,10 +28,6 @@ class AuthController
                 exit;
             }
         
-            // Sinon on garde les erreurs pour la vue
-            $_SESSION['errors'] = $errors;
-            header('Location: /auth/register');
-            exit;
         }
 
     
@@ -69,15 +66,15 @@ class AuthController
            
             // EMAIL
           
-            if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = "Votre email n'est pas valide";
+            if (empty($_POST['mail']) || !filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
+                $errors['mail'] = "Votre email n'est pas valide";
             } else {
                 
                 // Instanciation du model pour avoir une adresse email unique
-                $user = $this->userModel->findByEmail($_POST['email']);
+                $user = $this->userModel->findByEmail($_POST['mail']);
 
                 if ($user) {
-                    $errors['email'] = "Cette adresse mail est déjà prise";
+                    $errors['mail'] = "Cette adresse mail est déjà prise";
                 }
             }
 
@@ -104,7 +101,7 @@ class AuthController
 
                 $this->userModel->createUser([
                     'username' => $_POST['username'],
-                    'email' => $_POST['email'],
+                    'email' => $_POST['mail'],
                     'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                     'confirmation_token' => $token
                 ]);

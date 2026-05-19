@@ -1,8 +1,8 @@
 <?php
 
-use Models\MessageMongo;
+//use Models\MessageMongo;
 
-$messageModel = new MessageMongo();
+//$messageModel = new MessageMongo();
 
 $messageModel->create([
     'from' => 'test',

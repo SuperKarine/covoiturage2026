@@ -6,7 +6,7 @@ use PDO;
 
 class UtilisateursModel extends Model
 {
-    protected string $table = 'users';
+    protected string $table = 'Utilisateurs';
 
 
     //Pour retourner tous les utilisateurs
@@ -31,7 +31,7 @@ class UtilisateursModel extends Model
     // Pour avoir une adresse email unique
     public function findByEmail(string $email): array|false
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} WHERE email = ?");
+        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} WHERE mail = ?");
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
@@ -41,13 +41,13 @@ class UtilisateursModel extends Model
     {
         try {
             $stmt = self::$pdo->prepare("
-                INSERT INTO {$this->table} (username, email, password, confirmation_token)
+                INSERT INTO {$this->table} (username, mail, password, confirmation_token)
                 VALUES (?, ?, ?, ?)
             ");
     
             return $stmt->execute([
                 $data['username'],
-                $data['email'],
+                $data['mail'],
                 $data['password'],
                 $data['confirmation_token']
             ]);

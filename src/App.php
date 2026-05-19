@@ -13,6 +13,7 @@ class App
     
     public function run()
     {
+        error_log('REQUEST_URI: ' . $this->requestUri);
         try {
             echo $this->router->resolve($this->requestUri);
         } catch (RouteNotFoundException $e) {

@@ -1,9 +1,3 @@
-<?php
-
-session_start(); 
-$errors = $_SESSION['errors'] ?? [];
-unset($_SESSION['errors']);
-?>
 
 
 <div class="col-md-8 col-md-offset-2">
@@ -20,11 +14,11 @@ unset($_SESSION['errors']);
 </div>
 
 <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" class="form-control" name="email"
-           value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-    <?php if (!empty($errors['email'])): ?>
-        <span class="text-danger"><?= htmlspecialchars($errors['email']) ?></span>
+    <label for="mail">Mail</label>
+    <input type="email" id="mail" class="form-control" name="mail"
+           value="<?= htmlspecialchars($_POST['mail'] ?? '') ?>">
+    <?php if (!empty($errors['mail'])): ?>
+        <span class="text-danger"><?= htmlspecialchars($errors['mail']) ?></span>
     <?php endif; ?>
 </div>
 
