@@ -34,8 +34,22 @@ services:
       - .envTest
     depends_on:
       - db-test
+      - maildev
     networks:
       - ecoride_web
+
+  # =========================
+  # MAILDEV
+  # =========================
+  maildev:
+    image: maildev/maildev
+    container_name: ecoride-maildev-1
+    ports:
+      - "1080:1080"    
+      - "1025:1025"    
+    restart: unless-stopped
+    networks:
+      - ecoride_web    
 
 
   # =========================
