@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Services;
+namespace Services;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -23,15 +23,15 @@ class Mailer
         );
     }
 
-    public function sendConfirmation(string $toEmail, string $toName, string $token): bool
+    public function sendConfirmation(string $toMail, string $toName, string $token): bool
     {
         try {
             $this->mailer->clearAddresses();
-            $this->mailer->addAddress($toEmail, $toName);
+            $this->mailer->addAddress($toMail, $toName);
             $this->mailer->isHTML(true);
             $this->mailer->Subject = 'Confirmez votre inscription – Covoiturage2026';
 
-            $confirmUrl = ($_ENV['APP_URL'] ?? 'http://localhost:8085') . '/confirm?token=' . $token;
+            $confirmUrl = ($_ENV['APP_URL'] ?? 'http://localhost:8085') . '/auth/confirm?token=' . $token;
 
             ob_start();
             require dirname(__DIR__) . '/Views/emails/confirmation.php';

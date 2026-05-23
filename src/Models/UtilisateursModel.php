@@ -60,4 +60,17 @@ class UtilisateursModel extends Model
             throw $e; 
         }
     }
+
+    // Confirme le compte via le token reçu par email
+    public function confirmUser(string $token): bool
+    {
+        $stmt = self::$pdo->prepare("
+            UPDATE {$this->table}
+            SET is_confirmed = 1, confirmation_token = NULL
+            WHERE confirmation_token = ? AND is_confirmed = 0
+        ");
+        $stmt->execute([$token]);
+        return $stmt->rowCount() > 0;
+    }
+
 }

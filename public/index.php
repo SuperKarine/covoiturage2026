@@ -24,6 +24,9 @@ $router->register('/', [HomeController::class, 'index']);
 $router->register('/home', [HomeController::class, 'index']);
 $router->register('/auth', [AuthController::class, 'register']);
 $router->register('/auth/register', [AuthController::class, 'register']);
+$router->register('/auth/confirm', [AuthController::class, 'confirm']);
+$router->register('/auth/email-sent', [AuthController::class, 'emailSent']);
+
 
 $app = new App($router, $_SERVER['REQUEST_URI']);
 $app->run();

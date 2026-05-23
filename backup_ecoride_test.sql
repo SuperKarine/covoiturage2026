@@ -344,6 +344,7 @@ CREATE TABLE `Utilisateurs` (
   `mail` varchar(250) NOT NULL,
   `password` varchar(250) NOT NULL,
   `confirmation_token` varchar(100) DEFAULT NULL,
+  `is_confirmed` TINYINT(1) NOT NULL DEFAULT 0,
   `tel` varchar(20) NOT NULL,
   `id_compte` int(11) NOT NULL,
   `id_role` int(11) NOT NULL,
@@ -362,13 +363,13 @@ CREATE TABLE `Utilisateurs` (
 LOCK TABLES `Utilisateurs` WRITE;
 /*!40000 ALTER TABLE `Utilisateurs` DISABLE KEYS */;
 INSERT INTO `Utilisateurs` VALUES
-(1,'Admin','Systeme','admin@covoiturage2026.fr','$2y$10$abcdefghijklmnopqrstuv',NULL,'600000001',1,1),
-(2,'Dupont','Jean','jean.dupont@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,'600000002',2,2),
-(3,'Martin','Claire','claire.martin@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,'600000003',3,2),
-(4,'Bernard','Lucas','lucas.bernard@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,'600000004',4,2),
-(5,'Petit','Sophie','sophie.petit@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,'600000005',5,2),
-(6,'Durand','Marc','marc.durand@mail.com','$2y$10$hash',NULL,'600000006',6,3),
-(7,'Moreau','Julie','julie.moreau@mail.com','$2y$10$hash',NULL,'600000007',7,3);
+(1,'Admin','Systeme','admin@covoiturage2026.fr','$2y$10$abcdefghijklmnopqrstuv',NULL,0,'600000001',1,1),
+(2,'Dupont','Jean','jean.dupont@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,0,'600000002',2,2),
+(3,'Martin','Claire','claire.martin@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,0,'600000003',3,2),
+(4,'Bernard','Lucas','lucas.bernard@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,0,'600000004',4,2),
+(5,'Petit','Sophie','sophie.petit@mail.com','$2y$10$abcdefghijklmnopqrstuv',NULL,0,'600000005',5,2),
+(6,'Durand','Marc','marc.durand@mail.com','$2y$10$hash',NULL,0,'600000006',6,3),
+(7,'Moreau','Julie','julie.moreau@mail.com','$2y$10$hash',NULL,0,'600000007',7,3);
 /*!40000 ALTER TABLE `Utilisateurs` ENABLE KEYS */;
 UNLOCK TABLES;
 
