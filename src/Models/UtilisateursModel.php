@@ -23,16 +23,27 @@ class UtilisateursModel extends Model
     // Pour avoir un identifiant unique
     public function findByUsername(string $username): array|false
     {
-        $stmt = self::$pdo->prepare("SELECT id, username, email FROM {$this->table} WHERE username = ?");
-        $stmt->execute([$username]);
+        $stmt = self::$pdo->prepare("
+            SELECT u.*, r.name AS role_name
+            FROM {$this->table} u
+            JOIN Role r ON r.id = u.id_role
+            WHERE u.username = :username
+        ");
+        $stmt->execute([':username' => $username]);
         return $stmt->fetch();
+       
     }
 
     // Pour avoir une adresse email unique
     public function findByEmail(string $email): array|false
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM {$this->table} WHERE mail = ?");
-        $stmt->execute([$email]);
+        $stmt = self::$pdo->prepare("
+            SELECT u.*, r.name AS role_name
+            FROM {$this->table} u
+            JOIN Role r ON r.id = u.id_role
+            WHERE u.mail = :mail
+        ");
+        $stmt->execute([':mail' => $email]);
         return $stmt->fetch();
     }
 

@@ -3,6 +3,9 @@
 <div class="col-md-8 col-md-offset-2">
     <h2>S'inscrire</h2>
 <form action="/auth" method="POST">
+
+    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+
     <fieldset>
     <div class="form-group">
     <label for="pseudo">Nom d'utilisateur</label>

@@ -5,11 +5,11 @@
     <nav class="navbar navbar-duo fixed-top">
         <div class="container-fluid">
             <div class="nav-section success-section">
-                <a class="navbar-brand" href="/">EcoRide</a>
+                <a class="navbar-brand" href="/">Covoiturage2026</a>
             </div>
 
             <div class="nav-section secondary-section">
-                <!-- Tu peux ajouter du contenu ici -->
+                <!--  -->
             </div>
         </div>
     </nav>
@@ -24,18 +24,29 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/covoiturage">Covoiturage</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/passagers">Espace Passagers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/inscription">Inscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/connexion">Connexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/deconnexion">Déconnexion</a>
-                </li>
+
+                <?php if (!empty($_SESSION['user_id'])) : ?>
+                    <!-- CONNECTÉ -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/<?= strtolower($_SESSION['role_name']) ?>/dashboard">
+                            Mon espace (<?= htmlspecialchars($_SESSION['username']) ?>)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/logout">Déconnexion</a>
+                    </li>
+
+                <?php else : ?>
+                    <!-- VISITEUR -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/register">Inscription</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Connexion</a>
+                    </li>
+
+                <?php endif; ?>
+
             </ul>
         </div>
     </nav>
@@ -49,7 +60,7 @@
 
         <!-- Logo -->
         <a class="navbar-brand mobile-brand" href="/">
-            EcoRide
+            Covoiturage2026
         </a>
 
         <!-- Bouton burger -->
@@ -66,18 +77,29 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/covoiturage">Covoiturage</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/passagers">Espace Passagers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/inscription">Inscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/connexion">Connexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/deconnexion">Déconnexion</a>
-                </li>
+
+                <?php if (!empty($_SESSION['user_id'])) : ?>
+                    <!-- CONNECTÉ -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/<?= strtolower($_SESSION['role_name']) ?>/dashboard">
+                            Mon espace (<?= htmlspecialchars($_SESSION['username']) ?>)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/logout">Déconnexion</a>
+                    </li>
+
+                <?php else : ?>
+                    <!-- VISITEUR -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/register">Inscription</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Connexion</a>
+                    </li>
+
+                <?php endif; ?>
+                
             </ul>
         </div>
 

@@ -2,7 +2,7 @@
 
    <h2>Covoiturage2026</h2>
 
-   <p>Bienvenue sur mon site</p>
+   <p>Bienvenue sur Covoiturage2026</p>
 
 
 <div class="accueil-container">
