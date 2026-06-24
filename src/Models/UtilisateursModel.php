@@ -18,7 +18,7 @@ class UtilisateursModel extends Model
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     // Pour avoir un identifiant unique
     public function findByUsername(string $username): array|false
@@ -26,11 +26,11 @@ class UtilisateursModel extends Model
         $stmt = self::$pdo->prepare("
             SELECT u.*, r.name AS role_name
             FROM {$this->table} u
-            JOIN Role r ON r.id = u.id_role
+            JOIN Role r ON r.id_role = u.id_role
             WHERE u.username = :username
         ");
         $stmt->execute([':username' => $username]);
-        return $stmt->fetch();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
        
     }
 
@@ -40,37 +40,55 @@ class UtilisateursModel extends Model
         $stmt = self::$pdo->prepare("
             SELECT u.*, r.name AS role_name
             FROM {$this->table} u
-            JOIN Role r ON r.id = u.id_role
+            JOIN Role r ON r.id_role = u.id_role
             WHERE u.mail = :mail
         ");
         $stmt->execute([':mail' => $email]);
-        return $stmt->fetch();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     //Insère un nouvel utilisateur en base de données
     public function createUser(array|false $data): bool
-    {
-        try {
-            $stmt = self::$pdo->prepare("
-                INSERT INTO {$this->table} (username, mail, password, confirmation_token)
-                VALUES (?, ?, ?, ?)
-            ");
-    
-            return $stmt->execute([
-                $data['username'],
-                $data['mail'],
-                $data['password'],
-                $data['confirmation_token']
-            ]);
-    
-        } catch (\PDOException $e) {
-            
-            if ($e->getCode() === '23000') {
-                return false;
-            }
-            throw $e; 
+{
+    try {
+        self::$pdo->beginTransaction();
+
+        // Création du compte avec un solde à 0
+        $stmtCompte = self::$pdo->prepare("
+            INSERT INTO Compte (solde) VALUES (0)
+        ");
+        $stmtCompte->execute();
+        $idCompte = self::$pdo->lastInsertId();
+
+        //  Création de l'utilisateur en liant le compte créé
+        $stmt = self::$pdo->prepare("
+            INSERT INTO {$this->table} (nom, prenom, tel, username, mail, password, confirmation_token, is_confirmed, id_role, id_compte)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 0, 2, ?)
+        ");
+
+        $stmt->execute([
+            $data['nom'],
+            $data['prenom'],
+            $data['tel'],
+            $data['username'],
+            $data['mail'],
+            $data['password'],
+            $data['confirmation_token'],
+            $idCompte
+        ]);
+
+        self::$pdo->commit();
+        return true;
+
+    } catch (\PDOException $e) {
+        self::$pdo->rollBack();
+
+        if ($e->getCode() === '23000') {
+            return false;
         }
+        throw $e;
     }
+}
 
     // Confirme le compte via le token reçu par email
     public function confirmUser(string $token): bool

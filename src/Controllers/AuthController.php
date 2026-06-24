@@ -95,7 +95,7 @@ class AuthController
     {
         $errors = [];
 
-        $email    = trim($_POST['mail']    ?? '');
+        $email    = trim($_POST['mail'] ?? '');
         $password = $_POST['password'] ?? '';
 
         // Champs vides 
@@ -128,16 +128,16 @@ class AuthController
         
         session_regenerate_id(true);
 
-        $_SESSION['user_id']   = $user['id_utilisateurs'];
-        $_SESSION['username']  = $user['username'];
-        $_SESSION['role_id']   = $user['id_role'];
-        $_SESSION['role_name'] = $user['name'];
+        $_SESSION['user_id'] = $user['id_utilisateurs'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['id_role'] = $user['id_role'];
+        $_SESSION['role_name'] = $user['role_name'];
         
         // Renouvellement du token CSRF après login
         unset($_SESSION['csrf_token']);
         $this->generateCsrfToken();
 
-        $this->redirectByRole($user['role_id']);
+        $this->redirectByRole($user['id_role']);
 
         return $errors;
 
@@ -196,6 +196,20 @@ class AuthController
 
         if (!empty($_POST)) {
 
+            if (empty($_POST['nom'])) {
+                $errors['nom'] = 'Le nom est obligatoire.';
+            }
+
+            if (empty($_POST['prenom'])) {
+                $errors['prenom'] = 'Le prénom est obligatoire.';
+            }
+
+            if (empty($_POST['tel'])) {
+                $errors['tel'] = 'Le téléphone est obligatoire.';
+            } elseif (!preg_match('/^[0-9\s\+\-\.]{7,15}$/', $_POST['tel'])) {
+                $errors['tel'] = 'Format de téléphone invalide. Exemple : 06 12 34 56 78';
+            }
+
             if (empty($_POST['username']) || !preg_match("#^[a-zA-Z0-9_]+$#", $_POST['username'])) {
                 $errors['username'] = "Votre identifiant n'est pas valide";
             } else {
@@ -225,14 +239,18 @@ class AuthController
                 $token = bin2hex(random_bytes(32));
 
                 $this->userModel->createUser([
-                    'username'           => $_POST['username'],
-                    'email'              => $_POST['mail'],
-                    'password'           => password_hash($_POST['password'], PASSWORD_BCRYPT),
+                    'nom' => $_POST['nom'],
+                    'prenom' => $_POST['prenom'],
+                    'tel' => $_POST['tel'],
+                    'username' => $_POST['username'],
+                    'mail' => $_POST['mail'],
+                    'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                     'confirmation_token' => $token
                 ]);
 
                 $mailer = new Mailer();
                 $mailer->sendConfirmation($_POST['mail'], $_POST['username'], $token);
+                
             }
         }
 

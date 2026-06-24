@@ -13,12 +13,12 @@ class Mailer
     {
         $this->mailer = new PHPMailer(true);
         $this->mailer->isSMTP();
-        $this->mailer->Host     = $_ENV['MAIL_HOST'] ?? 'maildev';
-        $this->mailer->Port     = (int)($_ENV['MAIL_PORT'] ?? 1025);
+        $this->mailer->Host = $_ENV['MAIL_HOST'] ?? 'maildev';
+        $this->mailer->Port = (int)($_ENV['MAIL_PORT'] ?? 1025);
         $this->mailer->SMTPAuth = false;
         $this->mailer->CharSet  = 'UTF-8';
         $this->mailer->setFrom(
-            $_ENV['MAIL_FROM']      ?? 'no-reply@ecoride.fr',
+            $_ENV['MAIL_FROM']  ?? 'no-reply@ecoride.fr',
             $_ENV['MAIL_FROM_NAME'] ?? 'Covoiturage2026'
         );
     }
@@ -34,7 +34,7 @@ class Mailer
             $confirmUrl = ($_ENV['APP_URL'] ?? 'http://localhost:8085') . '/auth/confirm?token=' . $token;
 
             ob_start();
-            require dirname(__DIR__) . '/Views/emails/confirmation.php';
+            require dirname(__DIR__, 2) . '/views/emails/confirmation.php';
             $this->mailer->Body = ob_get_clean();
 
             $this->mailer->send();
