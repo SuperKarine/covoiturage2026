@@ -7,7 +7,8 @@
             "Controllers\\": "src/Controllers/",
             "Models\\": "src/Models/",
             "Exceptions\\": "src/Exceptions/",
-            "Services\\": "src/Services/"
+            "Services\\": "src/Services/",
+            "Entity\\": "src/Entity/"
         }
     },
     "require": {
