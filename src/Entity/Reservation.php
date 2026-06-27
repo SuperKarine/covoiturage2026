@@ -19,18 +19,19 @@ class Reservation
         $this->statut = StatutReservation::EN_ATTENTE;
     }
 
-    public function confirmer(Compte $comptePassager): void
+    public function confirmer(Compte $comptePassager, Compte $compteChauffeur): void
     {
         $prixTotal = $this->trajet->getPrix() * $this->nombrePlaces;
 
-        // Lève une Exception si solde insuffisant 
+        // Lève une Exception si solde insuffisant
         $comptePassager->debiter($prixTotal);
+        $compteChauffeur->crediter($prixTotal);
 
         $this->statut = StatutReservation::CONFIRMEE;
         $this->trajet->reserverPlace($this->nombrePlaces);
     }
 
-    public function annuler(Compte $comptePassager): void
+    public function annuler(Compte $comptePassager, Compte $compteChauffeur): void
     {
         if ($this->statut === StatutReservation::ANNULEE) {
             throw new Exception("Réservation déjà annulée.");
@@ -38,6 +39,7 @@ class Reservation
         if ($this->statut === StatutReservation::CONFIRMEE) {
             $prixTotal = $this->trajet->getPrix() * $this->nombrePlaces;
             $comptePassager->crediter($prixTotal);
+            $compteChauffeur->debiter($prixTotal);
             $this->trajet->libererPlaces($this->nombrePlaces);
         }
         $this->statut = StatutReservation::ANNULEE;

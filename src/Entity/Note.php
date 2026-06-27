@@ -1,6 +1,7 @@
 <?php
 
 namespace Entity;
+use Exception;
 
 class Note
 {
@@ -16,6 +17,10 @@ class Note
         int $id_trajet,
         int $id_auteur
     ) {
+        if ($note !== null && ($note < 1 || $note > 5)) {
+            throw new Exception("La note doit être comprise entre 1 et 5.");
+        }
+
         $this->note = $note;
         $this->id_utilisateurs = $id_utilisateurs;
         $this->id_trajet = $id_trajet;
