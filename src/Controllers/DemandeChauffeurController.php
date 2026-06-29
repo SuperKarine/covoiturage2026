@@ -2,17 +2,20 @@
 
 namespace Controllers;
 
-
 use Models\DemandeChauffeurModel;
-
+use Models\UtilisateursModel;
+use Services\Mailer;
+use Entity\DemandeChauffeur;
 
 class DemandeChauffeurController
 {
     private DemandeChauffeurModel $demandeModel;
+    private UtilisateursModel $utilisateursModel;
 
     public function __construct()
     {
         $this->demandeModel = new DemandeChauffeurModel();
+        $this->utilisateursModel = new UtilisateursModel();
     }
 
     /**
@@ -28,18 +31,20 @@ class DemandeChauffeurController
             return $this->jsonResponse(['error' => 'Corps de requête invalide'], 400);
         }
 
-        $id = $this->demandeModel->create((int) $data['id_utilisateurs']);
+        $idUtilisateur = (int) $data['id_utilisateurs'];
+
+        $id = $this->demandeModel->create($idUtilisateur);
 
         if ($id === false) {
             return $this->jsonResponse(['error' => 'Échec de la création de la demande'], 500);
         }
 
+        $this->envoyerMailDemandeDocuments($idUtilisateur);
+
         return $this->jsonResponse(['id_demande' => $id], 201);
     }
 
-    
     // GET /api/demandes-chauffeur/{id}
-     
 
     public function show(string $id): string
     {
@@ -54,7 +59,7 @@ class DemandeChauffeurController
 
     /**
      * GET /api/demandes-chauffeur
-     * Liste des demandes en attente 
+     * Liste des demandes en attente
      */
 
     public function index(): string
@@ -64,9 +69,8 @@ class DemandeChauffeurController
         return $this->jsonResponse($demandes);
     }
 
-    
     // POST /api/demandes-chauffeur/{id}/accepter
-    
+
     public function accepter(string $id): string
     {
         $demande = $this->demandeModel->findById((int) $id);
@@ -82,14 +86,13 @@ class DemandeChauffeurController
         }
 
         $this->demandeModel->save($demande);
+        $this->envoyerMailDecision($demande, true);
 
         return $this->jsonResponse(['message' => 'Demande acceptée, utilisateur passé en chauffeur']);
     }
-    
 
-    
     // POST /api/demandes-chauffeur/{id}/refuser
-     
+
     public function refuser(string $id): string
     {
         $demande = $this->demandeModel->findById((int) $id);
@@ -105,11 +108,12 @@ class DemandeChauffeurController
         }
 
         $this->demandeModel->save($demande);
+        $this->envoyerMailDecision($demande, false);
 
         return $this->jsonResponse(['message' => 'Demande refusée']);
     }
 
-    private function demandeToArray(\Entity\DemandeChauffeur $demande): array
+    private function demandeToArray(DemandeChauffeur $demande): array
     {
         return [
             'id_demande' => $demande->getIdDemande(),
@@ -120,10 +124,31 @@ class DemandeChauffeurController
         ];
     }
 
+    private function envoyerMailDemandeDocuments(int $idUtilisateur): void
+    {
+        $user = $this->utilisateursModel->findById($idUtilisateur);
+
+        if ($user) {
+            $mailer = new Mailer();
+            $mailer->sendDemandeDocuments($user['mail'], $user['prenom'] . ' ' . $user['nom']);
+        }
+    }
+
+    private function envoyerMailDecision(DemandeChauffeur $demande, bool $accepte): void
+    {
+        $user = $this->utilisateursModel->findById($demande->getIdUtilisateurs());
+
+        if ($user) {
+            $mailer = new Mailer();
+            $mailer->sendDecisionChauffeur($user['mail'], $user['prenom'] . ' ' . $user['nom'], $accepte);
+        }
+    }
+
     private function jsonResponse(mixed $data, int $statusCode = 200): string
     {
         http_response_code($statusCode);
         header('Content-Type: application/json');
         return json_encode($data);
     }
+    
 }
