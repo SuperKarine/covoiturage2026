@@ -155,6 +155,7 @@ class ReservationModel extends Model
         );
 
         $reservation->setIdReservation((int) $row['id_reservation']);
+        $reservation->setStatut(StatutReservation::from($row['status']));
 
         return $reservation;
     }

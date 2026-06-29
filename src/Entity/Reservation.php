@@ -58,6 +58,11 @@ class Reservation
         $this->id_reservation = $id_reservation;
     }
 
+    public function setStatut(StatutReservation $statut): void
+    {
+        $this->statut = $statut;
+    }
+
     public function getIdReservation(): int
     {
         return $this->id_reservation;
