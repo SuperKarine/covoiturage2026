@@ -1,5 +1,5 @@
+
 {
- 
     "autoload": {
         "psr-4": {
             "Router\\": "src/Router/",
@@ -9,6 +9,11 @@
             "Exceptions\\": "src/Exceptions/",
             "Services\\": "src/Services/",
             "Entity\\": "src/Entity/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
     },
     "require": {
