@@ -101,4 +101,19 @@ class UtilisateursModel extends Model
         $stmt->execute([$token]);
         return $stmt->rowCount() > 0;
     }
+
+    // Pour récupérer un utilisateur précis par son ID
+    public function findById(int $id): array|false
+    {
+        $stmt = $this->getPDO('read')->prepare("
+            SELECT u.*, r.name AS role_name
+            FROM {$this->table} u
+            JOIN Role r ON r.id_role = u.id_role
+            WHERE u.id_utilisateurs = :id
+        ");
+
+        $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
 }

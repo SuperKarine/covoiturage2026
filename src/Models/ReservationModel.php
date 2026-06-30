@@ -160,6 +160,34 @@ class ReservationModel extends Model
         return $reservation;
     }
 
+
+    
+    // Liste toutes les réservations d'un passager donné, avec les infos du trajet
+    
+    public function findByPassager(int $idPassager): array
+    {
+        $stmt = $this->getPDO('read')->prepare("
+            SELECT
+                r.id_reservation,
+                r.status,
+                r.nombre_places,
+                t.id_trajet,
+                t.date_depart,
+                t.prix,
+                vd.nom_ville AS ville_depart,
+                va.nom_ville AS ville_arrivee
+            FROM {$this->table} r
+            JOIN Trajets t ON r.id_trajet = t.id_trajet
+            JOIN Ville vd ON t.id_ville_depart = vd.id_ville
+            JOIN Ville va ON t.id_ville_arrivee = va.id_ville
+            WHERE r.id_utilisateurs = :id_passager
+            ORDER BY t.date_depart DESC
+        ");
+        $stmt->execute([':id_passager' => $idPassager]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     
      // Je crée une nouvelle réservation, statut initial EN_ATTENTE.
      
@@ -184,9 +212,9 @@ class ReservationModel extends Model
 
     /**
      * Sauvegarde le nouveau statut de la réservation, les soldes des comptes
-     * passager/chauffeur, le nombre de places restantes sur le trajet,
-     * et enregistre l'historique de la transaction associée.
-     * À appeler après confirmer()/annuler()/refuser() sur l'Entity.
+     * passager/chauffeur, le nombre de places restantes sur le trajet
+     * et enregistre l'historique de la transaction associée
+     * Que j'appelle après confirmer()/annuler()/refuser() sur l'Entity
      */
 
     public function save(Reservation $reservation, Compte $comptePassager, Compte $compteChauffeur): bool
@@ -286,4 +314,34 @@ class ReservationModel extends Model
             ':id_reservation' => $reservation->getIdReservation(),
         ]);
     }
+
+    /**
+    * Liste toutes les réservations en attente pour un trajet donné
+    * (vue chauffeur : réservations à traiter)
+    */
+
+    public function findEnAttenteParTrajet(int $idTrajet): array
+    {
+        $stmt = $this->getPDO('read')->prepare("
+            SELECT
+                r.id_reservation,
+                r.status,
+                r.nombre_places,
+                r.date_reservation,
+                u.id_utilisateurs,
+                u.nom,
+                u.prenom
+            FROM {$this->table} r
+            JOIN Utilisateurs u ON r.id_utilisateurs = u.id_utilisateurs
+            WHERE r.id_trajet = :id_trajet
+            AND r.status = 'en_attente'
+            ORDER BY r.date_reservation ASC
+        ");
+
+        $stmt->execute([':id_trajet' => $idTrajet]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+
 }

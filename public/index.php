@@ -20,6 +20,10 @@ use Controllers\AuthController;
 use Controllers\TrajetController;
 use Controllers\ReservationController;
 use Controllers\DemandeChauffeurController;
+use Controllers\DashboardChauffeurController;
+use Controllers\DashboardPassagerController;
+use Controllers\DashboardAdminController;
+
 
 
 
@@ -61,6 +65,16 @@ $router->register('GET', '/api/demandes-chauffeur/{id}', [DemandeChauffeurContro
 $router->register('POST', '/api/demandes-chauffeur/{id}/accepter', [DemandeChauffeurController::class, 'accepter']);
 $router->register('POST', '/api/demandes-chauffeur/{id}/refuser', [DemandeChauffeurController::class, 'refuser']);
 
+//Route pour Dashboard Chauffeur
+
+$router->register('GET', '/chauffeur/dashboard', [DashboardChauffeurController::class, 'index']);
+$router->register('GET', '/chauffeur/trajets/ajouter', [DashboardChauffeurController::class, 'ajouterTrajetForm']);
+
+// Route pour Dashboard Passager
+$router->register('GET', '/passager/dashboard', [DashboardPassagerController::class, 'index']);
+
+//Route pour Dashboard Admin
+$router->register('GET', '/admin/dashboard', [DashboardAdminController::class, 'index']);
 
 
 

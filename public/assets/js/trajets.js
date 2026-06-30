@@ -45,6 +45,11 @@ function afficherResultats(trajets) {
         const card = document.createElement('div');
         card.className = 'col-md-4';
 
+        const boutonReserver = estConnecte
+            ? `<button class="btn btn-primary mt-2" onclick="reserverTrajet(${trajet.id_trajet})">Réserver</button>`
+            : `<a href="/auth/login" class="btn btn-secondary mt-2">Se connecter pour réserver</a>`;
+
+
         card.innerHTML = `
             <div class="card h-100">
                 <div class="card-body">
@@ -58,10 +63,34 @@ function afficherResultats(trajets) {
                         <strong>Fumeur :</strong> ${trajet.fumeur ? 'Autorisé' : 'Non autorisé'}<br>
                         <strong>Animaux :</strong> ${trajet.animaux ? 'Autorisés' : 'Non autorisés'}
                     </p>
+                    ${boutonReserver}
+
                 </div>
             </div>
         `;
 
         conteneur.appendChild(card);
     });
+}
+
+function reserverTrajet(idTrajet) {
+    fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id_trajet: idTrajet,
+            id_utilisateurs: idUtilisateurConnecte,
+            nombre_places: 1
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Erreur : ' + data.error);
+            } else {
+                alert('Réservation envoyée ! En attente de confirmation du chauffeur.');
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Erreur :', error));
 }

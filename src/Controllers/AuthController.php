@@ -112,6 +112,8 @@ class AuthController
             return $errors;
         }
 
+        $user = $user[0];
+
         // Est-ce que le compte est confirmé 
         if (empty($user['is_confirmed'])) {
             $errors['login'] = "Confirmez votre email avant de vous connecter.";

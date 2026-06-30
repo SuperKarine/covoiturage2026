@@ -71,6 +71,10 @@ class TrajetController
 
     public function index(): string
     {
+        $estConnecte = isset($_SESSION['user_id']) && ($_SESSION['role_name'] ?? '') === 'passager';
+        $idUtilisateur = $_SESSION['user_id'] ?? null;
+
+        
         ob_start();
 
         require __DIR__ . '/../../views/trajets/index.php';

@@ -78,4 +78,9 @@
     <!-- Les cards de trajets  -->
 </div>
 
+<script>
+    const estConnecte = <?= $estConnecte ? 'true' : 'false' ?>;
+    const idUtilisateurConnecte = <?= $idUtilisateur ? (int) $idUtilisateur : 'null' ?>;
+</script>
+
 <script src="/assets/js/trajets.js"></script>

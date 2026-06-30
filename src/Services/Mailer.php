@@ -44,4 +44,46 @@ class Mailer
             return false;
         }
     }
+
+    public function sendDemandeDocuments(string $toMail, string $toName): bool
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($toMail, $toName);
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = 'Votre demande pour devenir chauffeur – Covoiturage2026';
+
+            ob_start();
+            require dirname(__DIR__, 2) . '/views/emails/demande-documents.php';
+            $this->mailer->Body = ob_get_clean();
+
+            $this->mailer->send();
+            return true;
+        } catch (Exception $e) {
+            error_log('Mailer Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendDecisionChauffeur(string $toMail, string $toName, bool $accepte): bool
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($toMail, $toName);
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = $accepte
+                ? 'Votre demande a été acceptée – Covoiturage2026'
+                : 'Votre demande a été refusée – Covoiturage2026';
+
+            ob_start();
+            require dirname(__DIR__, 2) . '/views/emails/decision-chauffeur.php';
+            $this->mailer->Body = ob_get_clean();
+
+            $this->mailer->send();
+            return true;
+        } catch (Exception $e) {
+            error_log('Mailer Error: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -22,7 +22,7 @@
                     <a class="nav-link" href="/">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/covoiturage">Covoiturage</a>
+                    <a class="nav-link" href="/trajets">Trajets</a>
                 </li>
 
                 <?php if (!empty($_SESSION['user_id'])) : ?>

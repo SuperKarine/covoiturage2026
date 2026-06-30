@@ -3,6 +3,15 @@
 <div class="col-md-8 col-md-offset-2">
     <h2>Se connecter</h2>
 
+<?php if (!empty($errors['login'])): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($errors['login']) ?></div>
+<?php endif; ?>
+
+<?php if (!empty($errors['csrf'])): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($errors['csrf']) ?></div>
+<?php endif; ?>
+
+
 <form action="/auth/login" method="POST">
     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
     
