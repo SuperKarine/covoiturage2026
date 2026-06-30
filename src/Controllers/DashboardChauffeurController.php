@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\TrajetModel;
 use Models\VoitureModel;
 use Models\ReservationModel;
+use Models\MessageModel;
 
 
 class DashboardChauffeurController
@@ -12,12 +13,15 @@ class DashboardChauffeurController
     private TrajetModel $trajetModel;
     private VoitureModel $voitureModel;
     private ReservationModel $reservationModel;
+    private MessageModel $messageModel;
+
 
     public function __construct()
     {
         $this->trajetModel = new TrajetModel();
         $this->voitureModel = new VoitureModel();
         $this->reservationModel = new ReservationModel();
+        $this->messageModel = new MessageModel();
     }
 
     
@@ -36,6 +40,8 @@ class DashboardChauffeurController
         }
 
         $voitures = $this->voitureModel->getByChauffeur($idChauffeur);
+        $mesMessages = $this->messageModel->findTousPourUtilisateur($idChauffeur);
+
 
         ob_start();
         require __DIR__ . '/../../views/chauffeur/dashboard.php';

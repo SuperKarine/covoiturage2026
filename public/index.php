@@ -23,6 +23,8 @@ use Controllers\DemandeChauffeurController;
 use Controllers\DashboardChauffeurController;
 use Controllers\DashboardPassagerController;
 use Controllers\DashboardAdminController;
+use Controllers\MessageController;
+
 
 
 
@@ -75,6 +77,14 @@ $router->register('GET', '/passager/dashboard', [DashboardPassagerController::cl
 
 //Route pour Dashboard Admin
 $router->register('GET', '/admin/dashboard', [DashboardAdminController::class, 'index']);
+
+//Routes pour les messages de MongoDB
+$router->register('POST', '/api/messages', [MessageController::class, 'create']);
+$router->register('GET', '/api/messages/{id}', [MessageController::class, 'show']);
+$router->register('GET', '/api/messages/entre/{id1}/{id2}', [MessageController::class, 'entreUtilisateurs']);
+$router->register('GET', '/api/messages/recus/{id}', [MessageController::class, 'recus']);
+$router->register('PUT', '/api/messages/{id}/lu', [MessageController::class, 'marquerCommeLu']);
+$router->register('DELETE', '/api/messages/{id}', [MessageController::class, 'delete']);
 
 
 

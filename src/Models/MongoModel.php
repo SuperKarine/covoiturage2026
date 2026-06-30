@@ -4,6 +4,7 @@ namespace Models;
 
 use MongoDB\Client;
 use MongoDB\Database;
+use MongoDB\Collection;
 
 class MongoModel
 {
@@ -24,5 +25,10 @@ class MongoModel
     public static function getDatabase(): Database
     {
         return self::$database;
+    }
+
+    protected function getCollection(string $name): Collection
+    {
+        return self::$database->selectCollection($name);
     }
 }

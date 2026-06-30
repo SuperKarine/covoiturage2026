@@ -52,4 +52,62 @@
     <?php endforeach; ?>
 <?php endif; ?>
 
+
+<hr class="my-5">
+
+<h2>Messagerie</h2>
+
+<form id="form-nouveau-message" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label for="id_destinataire" class="form-label">Destinataire (ID utilisateur)</label>
+        <input type="number" id="id_destinataire" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+        <label for="contenu" class="form-label">Message</label>
+        <input type="text" id="contenu" class="form-control" required>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+    </div>
+</form>
+
+<?php if (empty($mesMessages)): ?>
+    <p class="text-muted">Aucun message.</p>
+<?php else: ?>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>De</th>
+                <th>Vers</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Lu</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($mesMessages as $message): ?>
+                <tr>
+                    <td><?= htmlspecialchars($message['id_expediteur']) ?></td>
+                    <td><?= htmlspecialchars($message['id_destinataire']) ?></td>
+                    <td><?= htmlspecialchars($message['contenu']) ?></td>
+                    <td><?= htmlspecialchars($message['date_envoi']) ?></td>
+                    <td><?= $message['lu'] ? 'Oui' : 'Non' ?></td>
+                    <td>
+                        <?php if (!$message['lu']): ?>
+                            <button class="btn btn-sm btn-secondary" onclick="marquerLu('<?= $message['_id'] ?>')">Marquer lu</button>
+                        <?php endif; ?>
+                        <button class="btn btn-sm btn-danger" onclick="supprimerMessage('<?= $message['_id'] ?>')">Supprimer</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    const idChauffeurConnecte = <?= (int) $_SESSION['user_id'] ?>;
+</script>
+<script src="/assets/js/messagerie.js"></script>
+
 <script src="/assets/js/dashboard-chauffeur.js"></script>
