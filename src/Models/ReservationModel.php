@@ -163,7 +163,6 @@ class ReservationModel extends Model
 
     
     // Liste toutes les réservations d'un passager donné, avec les infos du trajet
-    
     public function findByPassager(int $idPassager): array
     {
         $stmt = $this->getPDO('read')->prepare("
@@ -174,8 +173,10 @@ class ReservationModel extends Model
                 t.id_trajet,
                 t.date_depart,
                 t.prix,
+                t.id_utilisateurs AS id_chauffeur,
                 vd.nom_ville AS ville_depart,
-                va.nom_ville AS ville_arrivee
+                va.nom_ville AS ville_arrivee,
+                CASE WHEN t.date_depart < NOW() THEN 1 ELSE 0 END AS trajet_termine
             FROM {$this->table} r
             JOIN Trajets t ON r.id_trajet = t.id_trajet
             JOIN Ville vd ON t.id_ville_depart = vd.id_ville
@@ -186,9 +187,8 @@ class ReservationModel extends Model
         $stmt->execute([':id_passager' => $idPassager]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
     
+
      // Je crée une nouvelle réservation, statut initial EN_ATTENTE.
      
     public function create(int $idTrajet, int $idUtilisateur, int $nombrePlaces): int|false
