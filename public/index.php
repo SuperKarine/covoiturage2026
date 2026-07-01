@@ -24,6 +24,7 @@ use Controllers\DashboardChauffeurController;
 use Controllers\DashboardPassagerController;
 use Controllers\DashboardAdminController;
 use Controllers\MessageController;
+use Controllers\NoteController;
 
 
 
@@ -31,7 +32,7 @@ use Controllers\MessageController;
 
 $router = new Router();
 
-// Routes existantes 
+// Routes Home et Auth 
 $router->register('GET', '/', [HomeController::class, 'index']);
 $router->register('GET', '/home', [HomeController::class, 'index']);
 $router->register('GET', '/auth', [AuthController::class, 'register']);
@@ -85,6 +86,9 @@ $router->register('GET', '/api/messages/entre/{id1}/{id2}', [MessageController::
 $router->register('GET', '/api/messages/recus/{id}', [MessageController::class, 'recus']);
 $router->register('PUT', '/api/messages/{id}/lu', [MessageController::class, 'marquerCommeLu']);
 $router->register('DELETE', '/api/messages/{id}', [MessageController::class, 'delete']);
+
+// Route pour notation chauffeurs
+$router->register('POST', '/api/notes', [NoteController::class, 'create']);
 
 
 
